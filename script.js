@@ -1,119 +1,76 @@
-$('form').submit(function (event) {
-    event.preventDefault();
-    convertInputDegree()
+const allSideMenu = document.querySelectorAll('#sidebar .side-menu.top li a');
+
+allSideMenu.forEach(item=> {
+	const li = item.parentElement;
+
+	item.addEventListener('click', function () {
+		allSideMenu.forEach(i=> {
+			i.parentElement.classList.remove('active');
+		})
+		li.classList.add('active');
+	})
 });
 
 
-$('#inputDegree').on('input', () => convertInputDegree());
-$('#selectInputDegreeType').change(() => convertInputDegree());
-$('#selectConversionType').change(() => convertInputDegree());
+
+
+// TOGGLE SIDEBAR
+const menuBar = document.querySelector('#content nav .bx.bx-menu');
+const sidebar = document.getElementById('sidebar');
+
+menuBar.addEventListener('click', function () {
+	sidebar.classList.toggle('hide');
+})
 
 
 
-function convertInputDegree() {
-
-    let inputDegree = parseInt($('#inputDegree').val());
-    let selectInputDegreeType = $('#selectInputDegreeType').val();
-    let conversionType = $('#selectConversionType').val();
-
-    let resultValue = "";
-
-    switch (selectInputDegreeType) {
-
-        case "C":
-            resultValue = cTo(inputDegree, conversionType);
-            break;
-
-        case "F":
-            resultValue = fTo(inputDegree, conversionType);
-            break;
-
-        case "K":
-            resultValue = kTo(inputDegree, conversionType);
-            break;
-
-    }
-
-    // To prevent NaN
-    if (isNaN(inputDegree)) {
-        $('#convertedDegree').text('');
-        return;
-    }
-
-    // To update the Degree Unit
-    $('#convertedUnit').text(conversionType)
 
 
-    // To update the Degree Value
-    $('#convertedDegree').text(resultValue.toFixed(2));
 
+
+const searchButton = document.querySelector('#content nav form .form-input button');
+const searchButtonIcon = document.querySelector('#content nav form .form-input button .bx');
+const searchForm = document.querySelector('#content nav form');
+
+searchButton.addEventListener('click', function (e) {
+	if(window.innerWidth < 576) {
+		e.preventDefault();
+		searchForm.classList.toggle('show');
+		if(searchForm.classList.contains('show')) {
+			searchButtonIcon.classList.replace('bx-search', 'bx-x');
+		} else {
+			searchButtonIcon.classList.replace('bx-x', 'bx-search');
+		}
+	}
+})
+
+
+
+
+
+if(window.innerWidth < 768) {
+	sidebar.classList.add('hide');
+} else if(window.innerWidth > 576) {
+	searchButtonIcon.classList.replace('bx-x', 'bx-search');
+	searchForm.classList.remove('show');
 }
 
 
-// Fahrenheit Converter
-function fTo(inputDegreeValue, conversionDegreeType) {
-
-    let temperature = '';
-
-    switch (conversionDegreeType) {
-        case 'F':
-            temperature = inputDegreeValue;
-            break;
-        case 'C':
-            temperature = eval((inputDegreeValue - 32) * (5 / 9));
-            break;
-        case 'K':
-
-            temperature = eval((inputDegreeValue + 459.67) * (5 / 9));
-            break;
-
-    }
-    return temperature;
-}
-
-// Celcius Converter
+window.addEventListener('resize', function () {
+	if(this.innerWidth > 576) {
+		searchButtonIcon.classList.replace('bx-x', 'bx-search');
+		searchForm.classList.remove('show');
+	}
+})
 
 
-function cTo(inputDegreeValue, conversionDegreeType) {
 
+const switchMode = document.getElementById('switch-mode');
 
-    let temperature = '';
-
-    switch (conversionDegreeType) {
-
-        case 'C':
-            temperature = inputDegreeValue;
-            break;
-        case 'F':
-            temperature = eval((inputDegreeValue * (9 / 5)) + 32);
-            break;
-        case 'K':
-            temperature = eval(inputDegreeValue + 273.15);
-            break;
-
-    }
-
-    return temperature;
-}
-
-// Kelvin Converter
-
-function kTo(inputDegreeValue, conversionDegreeType) {
-
-
-    let temperature = '';
-
-    switch (conversionDegreeType) {
-        case 'K':
-            temperature = inputDegreeValue;
-            break;
-        case 'F':
-            temperature = eval((inputDegreeValue - 273.15) * (9 / 5) + 32);
-            break;
-        case 'C':
-            temperature = eval((inputDegreeValue - 273.15));
-            break;
-
-    }
-    return temperature;
-}
+switchMode.addEventListener('change', function () {
+	if(this.checked) {
+		document.body.classList.add('dark');
+	} else {
+		document.body.classList.remove('dark');
+	}
+})
